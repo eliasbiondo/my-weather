@@ -1,7 +1,16 @@
+import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom';
+import { Main } from './pages/app/index';
+
 function App() {
 
   return (
-    <h1>Under development</h1>
+    <Router>
+      <Switch>
+        <Route path="/">
+          <Main />
+        </Route>
+      </Switch>
+    </Router>
   );
 }
 

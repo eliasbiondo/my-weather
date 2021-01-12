@@ -1,0 +1,15 @@
+:root {
+    font-size: 62.5%;
+    font-family: 'Nunito', 'Nunito Sans', sans-serif;
+}
+
+* {
+    color: white;
+    margin: 0;
+    padding: 0;
+    border: none;
+    outline: none;
+    text-decoration: none;
+    list-style-type: none;
+    box-sizing: border-box;
+}

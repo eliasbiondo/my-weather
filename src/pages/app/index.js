@@ -4,7 +4,8 @@ import styled from 'styled-components';
 import { MainStyledComponent } from '../../components/MainStyledComponent';
 import { Container } from '../../components/Container';
 import { Menu } from '../../components/Menu';
-import { MenuDate } from '../../components/MenuDate';
+import { MenuInfo } from '../../components/MenuInfo';
+import { Logo } from '../../components/Logo';
 
 export function Main(){
 
@@ -49,10 +50,18 @@ export function Main(){
         <MainStyledComponent>
             <Container>
                 <Menu>
-                    <MenuDate>
+                    <MenuInfo>
                         <span>{ hours }:{ minutes < 10 ? '0' + minutes : minutes}</span>
                         <span>{ months[month] }, { day }{ordinalNumberConcordance(day)} </span>
-                    </MenuDate>
+                    </MenuInfo>
+                    <Logo>
+                        <img src="/images/sunny-icon.svg" alt="sunny icon" draggable="false"/>
+                        <h1>my <br/> weather</h1>
+                    </Logo>
+                    <MenuInfo textAlign='right'>
+                        <span>Londrina</span>
+                        <span>Brazil</span>
+                    </MenuInfo>
                 </Menu>
             </Container>
         </MainStyledComponent>

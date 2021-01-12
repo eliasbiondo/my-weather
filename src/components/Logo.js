@@ -21,7 +21,7 @@ export const Logo = styled.header`
         order: -1;
         width: 100%;
         justify-content: space-between;
-        margin-bottom: 5vh;
+        margin-bottom: 2vh;
 
         & img {
             width: clamp(6.4rem, 24vw, 16rem);

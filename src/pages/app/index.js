@@ -67,9 +67,9 @@ export function Main(){
 
 
     const [response, setResponse] = useState(false);
-
     const [weatherUpdateTime, setWeatherUpdateTime] = useState(false);
-
+    const [sunriseTime, setSunriseTime] = useState(false);
+    const [sunsetTime, setSunsetTime] = useState(false);
     const [canRender, setRender] = useState(false);
 
     const isFirstRun = useRef(true);
@@ -91,6 +91,8 @@ export function Main(){
                 });
                 setResponse(res['data']);
                 setWeatherUpdateTime(new Date(res['data']['dt'] * 1000 + res['data']['timezone']))
+                setSunriseTime( new Date(res['data']['sys']['sunrise'] * 1000 + res['data']['timezone']))
+                setSunsetTime(new Date(res['data']['sys']['sunset'] * 1000 + res['data']['timezone']))
                 setRender(1);
             }
 
@@ -129,7 +131,7 @@ export function Main(){
                             <h1 className="temperature">{response['main']['temp'].toFixed(0)}º</h1>
 
                             <div className="info">
-                                <p className="temperature-description"> {response['weather']['0']['description']} </p>
+                                <p className="temperature-description"> {response['weather']['0']['main']} </p>
 
                                 <p className="city-name"> {response['name']} </p>
 
@@ -138,8 +140,8 @@ export function Main(){
                         </TemperatureBox>
                         <ClimaticData>
                             <div className="climatic-data-column">
-                                <p>Min: <b>{response['main']['temp_min']}ºC</b></p>
-                                <p>Max: <b>{response['main']['temp_max']}ºC</b></p>
+                                <p>Min: <b>{response['main']['temp_min'].toFixed(0)}ºC</b></p>
+                                <p>Max: <b>{response['main']['temp_max'].toFixed(0)}ºC</b></p>
                                 <p>Feels Like: <b>{response['main']['feels_like'].toFixed(0)}ºC</b></p>
                             </div>
                             <div className="climatic-data-column" style={{textAlign: 'right'}}>
@@ -149,7 +151,45 @@ export function Main(){
                             </div>
                         </ClimaticData>
                     </WeatherDataRow>
-                                    
+   
+                    <WeatherDataRow>
+                        <ClimaticData>
+                                <div className="climatic-data-column">
+                                    <div className="climatic-data-row">
+                                        <div>
+                                            <img src="/images/sunrise-icon.svg" alt="sunrise icon" draggable="false" />
+                                            <p>Sunrise: </p>
+                                        </div>
+                                        <p><b>{sunriseTime.getHours() < 10 ? '0' + sunriseTime.getHours() : sunriseTime.getHours()}:{sunriseTime.getMinutes() < 10 ? '0' + sunriseTime.getMinutes() : sunriseTime.getMinutes()}</b></p>
+                                    </div>
+                                    <div className="climatic-data-row">
+                                        <div>
+                                            <img src="/images/sunset-icon.svg" alt="sunset icon" draggable="false" />
+                                            <p>Sunset: </p>
+                                        </div>
+                                        <p><b>{sunsetTime.getHours() < 10 ? '0' + sunsetTime.getHours() : sunsetTime.getHours()}:{sunsetTime.getMinutes() < 10 ? '0' + sunsetTime.getMinutes() : sunsetTime.getMinutes()}</b></p>
+                                    </div>
+                                </div>
+                        </ClimaticData>
+                        <ClimaticData>
+                                <div className="climatic-data-column fullsize">
+                                    <div className="climatic-data-row">
+                                        <div>
+                                            <img src="/images/windspeed.svg" alt="windspeed icon" draggable="false" />
+                                            <p>Wind Speed: </p>
+                                        </div>
+                                        <p><b>{response['wind']['speed'].toFixed(0)}m/s</b></p>
+                                    </div>
+                                    <div className="climatic-data-row">
+                                        <div>
+                                            <img src="/images/winddirection.svg" alt="wind direction icon" draggable="false" />
+                                            <p>Wind Direction: </p>
+                                        </div>
+                                        <p><b>{response['wind']['deg'].toFixed(0)}º</b></p>
+                                    </div>
+                                </div>
+                        </ClimaticData>
+                    </WeatherDataRow>
                 </WeatherData>
             </Container>
         </MainStyledComponent>

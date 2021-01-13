@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import styled from 'styled-components';
 
 import { openweather } from '../../api/weather';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 import { MainStyledComponent } from '../../components/MainStyledComponent';
 import { Container } from '../../components/Container';
@@ -106,6 +107,7 @@ export function Main(){
         )
     }
 
+
     return (
         <MainStyledComponent temperature={response ? response['main']['temp'] : '0'}>
             <Container>
@@ -191,6 +193,18 @@ export function Main(){
                         </ClimaticData>
                     </WeatherDataRow>
                 </WeatherData>
+
+                <MapContainer style={{height: '20vh', width: '100%', borderRadius: '3rem', position: 'relative', zIndex: '500', marginTop:'2rem', marginBottom:'2rem'}} center={[location[0], location[1]]} zoom="20" scrollWheelZoom={true} zoomControl={false} attributionControl={false} dragging={true}>
+                    <TileLayer
+                        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                        url={`https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAP_BOX_ACCESS_TOKEN}`}
+                    />
+                    <Marker position={[location[0], location[1]]}>
+
+                    </Marker>
+                </MapContainer>
+                
+
             </Container>
         </MainStyledComponent>
     )

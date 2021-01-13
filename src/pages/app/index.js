@@ -11,6 +11,7 @@ import { Logo } from '../../components/Logo';
 import { WeatherData } from '../../components/WeatherData';
 import { WeatherDataRow } from '../../components/WeatherDataRow';
 import { TemperatureBox } from '../../components/TemperatureBox';
+import { ClimaticData } from '../../components/ClimaticData';
 
 export function Main(){
 
@@ -84,7 +85,6 @@ export function Main(){
                     params: {
                         lat: location[0],
                         lon: location[1],
-                        lang: 'pt_br',
                         units: 'metric',
                         appid: process.env.REACT_APP_OPEN_WEATHER_SECRET_KEY
                     }
@@ -124,18 +124,30 @@ export function Main(){
                 <WeatherData>
                     <WeatherDataRow>
                         <TemperatureBox temperature={response ? response['main']['temp'] : '0'}>
-                            <img src="/images/weather_icons/sunny_01.svg" />
+                            <img src="/images/weather_icons/sunny_01.svg" draggable="false"/>
 
                             <h1 className="temperature">{response['main']['temp'].toFixed(0)}º</h1>
 
                             <div className="info">
-                                <p className="temperature-description"> {response['weather']['0']['main']} </p>
+                                <p className="temperature-description"> {response['weather']['0']['description']} </p>
 
                                 <p className="city-name"> {response['name']} </p>
 
                                 <p className="weather-updated-time"> <b>{days[dayName]}, {day}</b> {months[month]}. {weatherUpdateTime.getHours() < 9 ? '0' + weatherUpdateTime.getHours() : weatherUpdateTime.getHours()}:{ weatherUpdateTime.getMinutes() < 10 ? '0' + weatherUpdateTime.getMinutes() : weatherUpdateTime.getMinutes()}</p>
                             </div>
                         </TemperatureBox>
+                        <ClimaticData>
+                            <div className="climatic-data-column">
+                                <p>Min: <b>{response['main']['temp_min']}ºC</b></p>
+                                <p>Max: <b>{response['main']['temp_max']}ºC</b></p>
+                                <p>Feels Like: <b>{response['main']['feels_like'].toFixed(0)}ºC</b></p>
+                            </div>
+                            <div className="climatic-data-column" style={{textAlign: 'right'}}>
+                                <p>Pressure: <b>{response['main']['pressure']} hPA</b></p>
+                                <p>Humidity: <b>{response['main']['humidity']}%</b></p>
+                                <p>Visibility: <b>{response['visibility']}m</b></p>
+                            </div>
+                        </ClimaticData>
                     </WeatherDataRow>
                                     
                 </WeatherData>

@@ -2,7 +2,7 @@
 
 <div align="center"><img src="https://github.com/eliasbiondo/my-weather/blob/main/project-image.png?raw=true" alt="my weather web app on laptop mockup"/></div> 
 
-<b> My Weather </b> is an open source react web app that allow the user to know the current weather data of your region! You can test it [clicking here](https://my-weather-1.herokuapp.com/) or open the latest deployed version on [https://my-weather-1.herokuapp.com/](https://my-weather-1.herokuapp.com/). 
+<b> My Weather </b> is an open source react web app that allow the user to know the current weather data of your region! You can test it [clicking here](https://my-weather-1.herokuapp.com/) or open the lastest deployed version on [https://my-weather-1.herokuapp.com/](https://my-weather-1.herokuapp.com/). 
 
 <b>Why?</b> I've decided to create this app to have a clean and minimalist place to know about weather data. Furthermore, I've created this app to practice my newests knowledges about react js and axios (consuming api's).
 

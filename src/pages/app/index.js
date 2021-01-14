@@ -84,6 +84,16 @@ export function Main(){
     const [weatherUpdateTime, setWeatherUpdateTime] = useState(false);
     const [sunriseTime, setSunriseTime] = useState(false);
     const [sunsetTime, setSunsetTime] = useState(false);
+    const [temperatureIcon, setTemperatureIcon] = useState(false);
+
+    // Icons id
+    const clearSkyIcons = ['01d','01n'];
+    const partyCloudSkyIcons = ['02d','02n','03d','03n'];
+    const cloudySkyIcons = ['04d','04n','50d'];
+    const snowSkyIcons = ['13d'];
+    const lightRainSkyIcons = ['10d'];
+    const intensityRainSkyIcons = ['13d','09d'];
+    const thunderstormSkyIcons = ['11d']
 
     // Page Hooks
     const [isDataLoaded, setisDataLoaded] = useState(false);
@@ -110,6 +120,7 @@ export function Main(){
                 setWeatherUpdateTime(new Date(res['data']['dt'] * 1000 + res['data']['timezone']))
                 setSunriseTime( new Date(res['data']['sys']['sunrise'] * 1000 + res['data']['timezone']))
                 setSunsetTime(new Date(res['data']['sys']['sunset'] * 1000 + res['data']['timezone']))
+                setTemperatureIcon(res['data']['weather']['0']['icon'])
                 setisDataLoaded(true);
             }
 
@@ -181,7 +192,35 @@ export function Main(){
                     <WeatherDataRow>
 
                         <TemperatureBox temperature={response ? response['main']['temp'] : '0'}>
-                            <img src="/images/weather_icons/sunny_01.svg" draggable="false"/>
+                            
+                            {clearSkyIcons.includes(temperatureIcon) && 
+                                <img src="/images/weather_icons/sunny_01.svg" draggable="false"/>
+                            }
+
+                            {partyCloudSkyIcons.includes(temperatureIcon) &&
+                                <img src="/images/weather_icons/partycloudy.svg" draggable="false"/>
+                            }
+
+                            {cloudySkyIcons.includes(temperatureIcon) &&
+                                <img src="/images/weather_icons/cloudy.svg" draggable="false"/>
+                            }
+
+                            {snowSkyIcons.includes(temperatureIcon) &&
+                                <img src="/images/weather_icons/snow.svg" draggable="false"/>
+                            }
+
+                            {lightRainSkyIcons.includes(temperatureIcon) &&
+                                <img src="/images/weather_icons/sun_and_rain.svg" draggable="false"/>
+                            }
+
+                            {intensityRainSkyIcons.includes(temperatureIcon) &&
+                                <img src="/images/weather_icons/rain.svg" draggable="false"/>
+                            }
+
+                            {thunderstormSkyIcons.includes(temperatureIcon) &&
+                                <img src="/images/weather_icons/thunderstorm.svg" draggable="false"/>
+                            }
+
 
                             <h1 className="temperature">{response['main']['temp'].toFixed(0)}º</h1>
 

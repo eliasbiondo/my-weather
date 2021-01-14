@@ -13,6 +13,8 @@ import { WeatherData } from '../../components/WeatherData';
 import { WeatherDataRow } from '../../components/WeatherDataRow';
 import { TemperatureBox } from '../../components/TemperatureBox';
 import { ClimaticData } from '../../components/ClimaticData';
+import { MapIcon } from '../../components/MapIcon';
+import { icon } from 'leaflet';
 
 export function Main(){
 
@@ -199,7 +201,7 @@ export function Main(){
                         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                         url={`https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/256/{z}/{x}/{y}@2x?access_token=${process.env.REACT_APP_MAP_BOX_ACCESS_TOKEN}`}
                     />
-                    <Marker position={[location[0], location[1]]}>
+                    <Marker position={[location[0], location[1]]} icon={MapIcon}>
 
                     </Marker>
                 </MapContainer>

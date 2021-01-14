@@ -1,29 +1,28 @@
 import React, {useState, useEffect, useRef} from 'react';
-import styled from 'styled-components';
 
+// OpenWeatherMap API && Leaflet Map Components import
 import { openweather } from '../../api/weather';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
+// Components import
 import { MainStyledComponent } from '../../components/MainStyledComponent';
+import { LocationRequestScreen } from '../../components/LocationRequestScreen'
 import { Container } from '../../components/Container';
 import { Menu } from '../../components/Menu';
 import { MenuInfo } from '../../components/MenuInfo';
 import { Logo } from '../../components/Logo';
+import { MinLogo } from '../../components/MinLogo';
 import { WeatherData } from '../../components/WeatherData';
 import { WeatherDataRow } from '../../components/WeatherDataRow';
 import { TemperatureBox } from '../../components/TemperatureBox';
 import { ClimaticData } from '../../components/ClimaticData';
 import { MapIcon } from '../../components/MapIcon';
-import { icon } from 'leaflet';
+import { Warnings } from '../../components/Warnings';
 
 export function Main(){
 
-    // Grab the user's local date when page is renderized 
+    // Grabbing the exactly user's local time when page is renderized 
     let date = new Date;
-
-    // Months name
-    const months = ['January','February','March','April','May','June','July','August','Septempber','October', 'November', 'December'];
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     // Date hooks
     const [month, setMonth] = useState(date.getMonth())
@@ -32,7 +31,7 @@ export function Main(){
     const [hours, setHours] = useState(date.getHours())
     const [minutes, setMinutes] = useState(date.getMinutes())
 
-    // Date refresher 
+    // Date refresher (to update the user's local time every second)
     useEffect(() => {
         setInterval(() => {
             date = new Date;
@@ -41,24 +40,34 @@ export function Main(){
             setHours(date.getHours())
         }, 1000)
     }, [])
+    
+    // Months && Days name
+    const months = ['January','February','March','April','May','June','July','August','Septempber','October', 'November', 'December'];
+    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
     // Ordinal Numbers Concordance
     const st = [1, 21, 31];
     const nd = [2, 22];
+    const rd = [3, 23];
 
     function ordinalNumberConcordance(day) {
         if ( st.includes(day) ) {
             return 'st'
         } else if (nd.includes(day)) {
             return 'nd'
+        } else if (rd.includes(day)) {
+            return 'rd'
         } else {
             return 'th'
         }
     }
 
+    // Location hook ( to storage the user's geolocation: latitude & longitude )
     const [location, setLocation] = useState(false)
 
+    // Grabbing the user's geolocation on page render
     useEffect(() => {
+
         navigator.geolocation.getCurrentPosition( position => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
@@ -66,15 +75,20 @@ export function Main(){
             setLocation([lat, lon])
 
         })
+
     }, [])
 
 
+    // Weather Hooks
     const [response, setResponse] = useState(false);
     const [weatherUpdateTime, setWeatherUpdateTime] = useState(false);
     const [sunriseTime, setSunriseTime] = useState(false);
     const [sunsetTime, setSunsetTime] = useState(false);
-    const [canRender, setRender] = useState(false);
 
+    // Page Hooks
+    const [isDataLoaded, setisDataLoaded] = useState(false);
+
+    // Getting Weather Data from OpenWeatherMap API
     const isFirstRun = useRef(true);
     useEffect (() => {
             
@@ -96,39 +110,63 @@ export function Main(){
                 setWeatherUpdateTime(new Date(res['data']['dt'] * 1000 + res['data']['timezone']))
                 setSunriseTime( new Date(res['data']['sys']['sunrise'] * 1000 + res['data']['timezone']))
                 setSunsetTime(new Date(res['data']['sys']['sunset'] * 1000 + res['data']['timezone']))
-                setRender(1);
+                setisDataLoaded(true);
             }
 
             getData();
 
     }, [location])
 
-    if (!canRender) {
+    if (!location) {
+        return (
+            <LocationRequestScreen>
+                <Container style={{display: 'flex', flexDirection: 'column', alignItems:'center', justifyContent: 'space-between'}}>
+                    <MinLogo>
+                            <img src="/images/sunny-icon.svg" alt="sunny icon" draggable="false"/>
+                            <h1>my <br/> weather</h1>
+                    </MinLogo>
+                    <Warnings>
+                        <p>We need to know your geolocation to determine your position and access the exactly weather data for your region on our server. Allow the location permission on your browser to continue using this website.</p>
+                        <p>Don’t worry, we don’t storage your position or any other data.</p>
+                    </Warnings>
+                </Container>
+                <div className="citybg">
+
+                </div>
+            </LocationRequestScreen>
+        )
+    }
+
+    if (!isDataLoaded) {
         return(
-            <h1>Olá!</h1>
+           <h1>Loading...</h1>
         )
     }
 
 
     return (
-        <MainStyledComponent temperature={response ? response['main']['temp'] : '0'}>
+        <MainStyledComponent temperature={response['main']['temp']}>
             <Container>
                 <Menu>
                     <MenuInfo>
                         <span>{ hours < 10 ? '0' + hours : hours}:{ minutes < 10 ? '0' + minutes : minutes}</span>
                         <span>{ months[month] }, { day }{ordinalNumberConcordance(day)} </span>
                     </MenuInfo>
+
                     <Logo>
                         <img src="/images/sunny-icon.svg" alt="sunny icon" draggable="false"/>
                         <h1>my <br/> weather</h1>
                     </Logo>
+
                     <MenuInfo textAlign='right'>
                         <span>{response ? response['name'] : 'Loading..'}</span>
                         <span>{response ? response['sys']['country'] : 'Loading...'}</span>
                     </MenuInfo>
                 </Menu>
+
                 <WeatherData>
                     <WeatherDataRow>
+
                         <TemperatureBox temperature={response ? response['main']['temp'] : '0'}>
                             <img src="/images/weather_icons/sunny_01.svg" draggable="false"/>
 
@@ -142,6 +180,7 @@ export function Main(){
                                 <p className="weather-updated-time"> <b>{days[dayName]}, {day}</b> {months[month]}. {weatherUpdateTime.getHours() < 9 ? '0' + weatherUpdateTime.getHours() : weatherUpdateTime.getHours()}:{ weatherUpdateTime.getMinutes() < 10 ? '0' + weatherUpdateTime.getMinutes() : weatherUpdateTime.getMinutes()}</p>
                             </div>
                         </TemperatureBox>
+
                         <ClimaticData>
                             <div className="climatic-data-column">
                                 <p>Min: <b>{response['main']['temp_min'].toFixed(0)}ºC</b></p>
@@ -154,9 +193,11 @@ export function Main(){
                                 <p>Visibility: <b>{response['visibility']}m</b></p>
                             </div>
                         </ClimaticData>
+
                     </WeatherDataRow>
    
                     <WeatherDataRow>
+
                         <ClimaticData>
                                 <div className="climatic-data-column">
                                     <div className="climatic-data-row">
@@ -175,6 +216,7 @@ export function Main(){
                                     </div>
                                 </div>
                         </ClimaticData>
+
                         <ClimaticData>
                                 <div className="climatic-data-column fullsize">
                                     <div className="climatic-data-row">
@@ -193,6 +235,7 @@ export function Main(){
                                     </div>
                                 </div>
                         </ClimaticData>
+
                     </WeatherDataRow>
                 </WeatherData>
 

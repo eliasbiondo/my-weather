@@ -139,7 +139,20 @@ export function Main(){
 
     if (!isDataLoaded) {
         return(
-           <h1>Loading...</h1>
+            <LocationRequestScreen>
+                <Container style={{display: 'flex', flexDirection: 'column', alignItems:'center', justifyContent: 'space-between'}}>
+                    <MinLogo>
+                            <img src="/images/sunny-icon.svg" alt="sunny icon" draggable="false"/>
+                            <h1>my <br/> weather</h1>
+                    </MinLogo>
+                    <Warnings>
+                        <h1>Loading data...</h1>
+                    </Warnings>
+                </Container>
+                <div className="citybg">
+
+                </div>
+            </LocationRequestScreen>
         )
     }
 
